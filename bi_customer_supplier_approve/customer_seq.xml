@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="custome_custom_sequence" model="ir.sequence">
+            <field name="name">Customer Unique Reference</field>
+            <field name="code">res.partner.unique.code</field>
+            <field name="prefix">CUST_</field>
+            <field name="padding">6</field>
+        </record>
+	</data>
+</odoo>
