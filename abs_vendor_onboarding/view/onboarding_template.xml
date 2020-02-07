@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+   <template id="menu_onboarding" name="Onboarding">
+       <t t-call="website.layout">
+           <div class="container">
+               <div>
+                   <form action="/onboarding" class="form-horizontal mt32">
+                       <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                       <div style="text-align: center;">
+                           <h1>Onboarding</h1>
+                       </div>
+                       <div class="row" align="center">
+                           <div class="col-md-4">
+                           </div>
+                           <div class="col-md-4" align="center">
+                               <a href="/company_detail" class="btn btn-primary btn-lg" style="width: 80%">Company Detail</a>
+                           </div>
+                           <div class="col-md-4">
+                           </div>
+                       </div><br/>
+                       <div class="row" align="center">
+                           <div class="col-md-4">
+                           </div>
+                           <div class="col-md-4" align="center">
+                               <a href="/fiscal_address" class="btn btn-primary btn-lg" style="width: 80%">Fiscal Address</a>
+                           </div>
+                           <div class="col-md-4">
+                           </div>
+                       </div>
+                   </form>
+               </div>
+           </div>
+      </t>
+    </template>
+
+    <template id="form_company_detail" name="Company Detail">
+        <t t-call="website.layout">
+           <div class="container">
+               <div class="o_website_company_name">
+                   <form action="/company_detail/submit" method="POST" id="company_detail">
+                       <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                       <div style="text-align: left;">
+                           <h1>Company Detail</h1>
+                       </div><br/>
+                       <h6>RAZON SOCIAL (COMPANY NAME):</h6>
+                       <div class="row">
+                           <div class="col-md-6"><br/>
+                               <input type="text" class="form-control" required="True" name="company_name" id="company_name"/>
+                           </div>
+                       </div><br/>
+                       <h6>RFC (TAX ID/VAT NUMBER):</h6>
+                       <div class="row">
+                           <div class="col-md-6"><br/>
+                               <input type="text" class="form-control" required='True' name="rfc" id="rfc"/>
+                           </div>
+                       </div><br/>
+                       <div class="row">
+                           <div class="col-md-6">
+                               <a href="/onboarding" class="btn btn-primary mb32"><span class="fa fa-long-arrow-left" /> Back </a>
+                               <button class="btn btn-primary pull-right mb32 js_submit_btn" id="company_detail_submit" align="right">Submit</button>
+                           </div>
+                       </div>
+                   </form>
+               </div>
+           </div>
+       </t>
+    </template>
+
+    <template id="form_fiscal_address" name="Fiscal Address">
+        <t t-call="website.layout">
+           <div class="container">
+               <div class="o_website_fiscal_address">
+                   <form id="fiscal_address" role="form" t-attf-action="/fiscal_address/submit" method="post" enctype="multipart/form-data">
+                       <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                       <div style="text-align: left;">
+                           <h1>Fiscal Address</h1>
+                       </div><br/>
+                       <h6>NOMBRE COMERCIAL DE LA EMPRESA (COMMERCIAL NAME):</h6>
+                       <div class="row">
+                           <div class="col-md-6"><br/>
+                               <input type="text" class="form-control" required="True" name="commercial_name" id="commercial_name"/>
+                           </div>
+                       </div><br/>
+                       <h6>DOMICILIO FISCAL (FISCAL ADDRESS):</h6>
+                       <div class="row">
+                           <div class="col-md-6"><br/>
+                               <input type="text" class="form-control" required="True" name="street" id="street" placeholder="Street"/>
+                           </div>
+                       </div>
+                       <div class="row">
+                           <div class="col-md-6"><br/>
+                               <input type="text" class="form-control" name="street2" id="street2" placeholder="Street2"/>
+                           </div>
+                       </div>
+                       <div class="row">
+                           <div class="col-md-3"><br/>
+                               <input type="text" class="form-control" name="city" id="city" placeholder="City"/>
+                           </div>
+                           <div class="col-md-3"><br/>
+                               <select id="state_id" name="state_id" t-attf-class="form-control" required='True'>
+                                   <option value=""> -- State -- </option>
+                                   <t t-foreach="state_province_ids" t-as="s">
+                                       <option t-att-value="s.id" t-att-selected="s.id == (state and state.id or -1)">
+                                           <t t-esc="s.name" />
+                                       </option>
+                                   </t>
+                               </select>
+                           </div>
+                       </div>
+                       <div class="row">
+                           <div class="col-md-3"><br/>
+                               <input type="text" class="form-control" name="postal_code" placeholder="Postal Code" id="postal_code"/>
+                           </div>
+                           <div class="col-md-3"><br/>
+                               <select id="country_id" name="country_id" t-attf-class="form-control" required='True' placeholder="Country">
+                                   <option value=""> -- Country -- </option>
+                                       <t t-foreach="country_ids" t-as="c">
+                                           <option t-att-value="c.id" t-att-selected="c.id == (country and country.id or -1)">
+                                               <t t-esc="c.name" />
+                                           </option>
+                                       </t>
+                               </select>
+                           </div>
+                       </div><br/>
+                       <h6>ATTACHMENT</h6>
+                       <div class="row">
+                           <div class="col-md-12" id="attachment1" >
+                               <input type="file" name="attachment" class="file clearFields" data-show-upload="true" data-show-caption="true" data-show-preview="true" id="attachment"/>
+                           </div>
+                       </div><br/>
+                       <div class="row">
+                           <div class="col-md-6">
+                               <a href="/onboarding" class="btn btn-primary mb32"><span class="fa fa-long-arrow-left" /> Back </a>
+                               <button class="btn btn-primary pull-right mb32 js_fiscal_submit_btn" id="fiscal_address_submit" align="right">Submit</button>
+                           </div>
+                       </div>
+                   </form>
+               </div>
+           </div>
+       </t>
+    </template>
+
+    <template id="user_thank_you" name="Thank You">
+        <t t-call="website.layout">
+           <div class="container">
+               <div>
+                   <form action="/thank_you" id="thank_you">
+                       <div id="wrap" class="oe_structure oe_empty">
+                       <div class="container mt16">
+                           <h1 class="text-center">Thank You</h1>
+                           <h3 class="text-muted text-center">We will get back to you shortly</h3>
+                       </div>
+                       </div>
+                   </form>
+               </div>
+           </div>
+        </t>
+    </template>
+</odoo>

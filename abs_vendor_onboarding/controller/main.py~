@@ -1,0 +1,1147 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from odoo import http, _
+from odoo.addons.auth_signup.models.res_users import SignupError
+from odoo.addons.web.controllers.main import ensure_db, Home
+from odoo.exceptions import UserError
+from odoo.http import request
+from collections import OrderedDict
+from odoo.http import Controller, request, route
+
+import werkzeug
+import json
+import base64
+from random import randint
+import os
+
+import logging
+_logger = logging.getLogger(__name__)
+
+import openerp.http as http
+from openerp.http import request
+import requests
+
+from odoo.addons.http_routing.models.ir_http import slug
+
+_logger = logging.getLogger(__name__)
+
+
+class WebsiteSale(http.Controller):
+
+
+    @http.route(['/box_style_infos/<model("quote.box.style"):box>'], type='json', auth="public", methods=['POST'], website=True)
+    def call_box_style_infos(self, box, **kw):
+        print (">>>>>>>>>>>>>>box>>>>>>>>>>>",box)
+        hide_fields_list = []
+        show_fields_list = []
+        if box.rigid_box:
+            print (">>>>>>>>>>>>>>box.rigid_box>>>>>>>>>>>",box.rigid_box)
+            #hide_fields_list = ['rigid_box_needed_id']
+            show_fields_list = []
+
+            show_fields_list.append('box_style_section')
+            show_fields_list.append('rigid_box_section')
+
+            show_fields_list.append('div_rigid_box_needed_id')
+            show_fields_list.append('div_box_wrap_needed_id')
+            show_fields_list.append('div_box_shape_id')
+            show_fields_list.append('div_single_wall_id')            
+            show_fields_list.append('div_double_wall_id')
+            show_fields_list.append('div_triple_wall_id')
+            show_fields_list.append('div_box_weight')
+            show_fields_list.append('div_box_color_id')
+            show_fields_list.append('div_need_printing_id')
+            show_fields_list.append('div_quantity1')
+            show_fields_list.append('div_quantity2')
+            show_fields_list.append('div_quantity3')
+            show_fields_list.append('div_order_frequency_id')
+            show_fields_list.append('div_budget')
+            show_fields_list.append('div_need_boxes_id')
+            show_fields_list.append('div_curr_supplier')
+            show_fields_list.append('div_project_id')
+            show_fields_list.append('div_strength_required')
+            show_fields_list.append('div_weight')
+            show_fields_list.append('div_need_help_strength')
+            show_fields_list.append('div_need_printing')
+            show_fields_list.append('div_quantity_needed')
+            show_fields_list.append('div_order_frequency')
+            show_fields_list.append('div_sample')
+            show_fields_list.append('div_need_sample')
+            show_fields_list.append('div_example')
+            show_fields_list.append('div_design_example')
+            show_fields_list.append('div_file')
+            show_fields_list.append('div_Budget_respect')
+            show_fields_list.append('div_need_boxes')
+            show_fields_list.append('div_supplier')
+            show_fields_list.append('div_contact_supplier')
+            show_fields_list.append('div_contact_curr_supplier')
+            show_fields_list.append('div_project')
+            show_fields_list.append('div_wall_type_id')
+        elif box.folding_box:
+            print (">>>>>>>>>>>>>>box.folding_box>>>>>>>>>>>",box.folding_box)
+            show_fields_list = []
+
+            show_fields_list.append('box_style_section')
+            show_fields_list.append('folding_box_section')
+
+            show_fields_list.append('div_folding_style_id')
+            show_fields_list.append('div_substrate_type_id')
+            show_fields_list.append('div_single_wall_id')            
+            show_fields_list.append('div_double_wall_id')
+            show_fields_list.append('div_triple_wall_id')
+            show_fields_list.append('div_box_weight')
+            show_fields_list.append('div_box_color_id')
+            show_fields_list.append('div_need_printing_id')
+            show_fields_list.append('div_quantity1')
+            show_fields_list.append('div_quantity2')
+            show_fields_list.append('div_quantity3')
+            show_fields_list.append('div_order_frequency_id')
+            show_fields_list.append('div_budget')
+            show_fields_list.append('div_need_boxes_id')
+            show_fields_list.append('div_curr_supplier')
+            show_fields_list.append('div_project_id')
+            show_fields_list.append('div_strength_required')
+            show_fields_list.append('div_weight')
+            show_fields_list.append('div_need_help_strength')
+            show_fields_list.append('div_need_printing')
+            show_fields_list.append('div_quantity_needed')
+            show_fields_list.append('div_order_frequency')
+            show_fields_list.append('div_sample')
+            show_fields_list.append('div_need_sample')
+            show_fields_list.append('div_example')
+            show_fields_list.append('div_design_example')
+            show_fields_list.append('div_file')
+            show_fields_list.append('div_Budget_respect')
+            show_fields_list.append('div_need_boxes')
+            show_fields_list.append('div_supplier')
+            show_fields_list.append('div_contact_supplier')
+            show_fields_list.append('div_contact_curr_supplier')
+            show_fields_list.append('div_project')
+            hide_fields_list.append('div_rigid_box_type_id')
+            hide_fields_list.append('div_wrap_type_id')
+            show_fields_list.append('div_wall_type_id')
+        elif box.die_cut_box:
+            print (">>>>>>>>>>>>>>box.die_cut_box>>>>>>>>>>>",box.die_cut_box)
+            show_fields_list = []
+            show_fields_list.append('div_print_label_id')
+            show_fields_list.append('div_single_wall_id')            
+            show_fields_list.append('div_double_wall_id')
+            show_fields_list.append('div_triple_wall_id')
+            show_fields_list.append('div_box_weight')
+            show_fields_list.append('div_box_color_id')
+            show_fields_list.append('div_need_printing_id')
+            show_fields_list.append('div_quantity1')
+            show_fields_list.append('div_quantity2')
+            show_fields_list.append('div_quantity3')
+            show_fields_list.append('div_order_frequency_id')
+            show_fields_list.append('div_budget')
+            show_fields_list.append('div_need_boxes_id')
+            show_fields_list.append('div_curr_supplier')
+            show_fields_list.append('div_project_id')
+            show_fields_list.append('div_strength_required')
+            show_fields_list.append('div_weight')
+            show_fields_list.append('div_need_help_strength')
+            show_fields_list.append('div_need_printing')
+            show_fields_list.append('div_quantity_needed')
+            show_fields_list.append('div_order_frequency')
+            show_fields_list.append('div_sample')
+            show_fields_list.append('div_need_sample')
+            show_fields_list.append('div_example')
+            show_fields_list.append('div_design_example')
+            show_fields_list.append('div_file')
+            show_fields_list.append('div_Budget_respect')
+            show_fields_list.append('div_need_boxes')
+            show_fields_list.append('div_supplier')
+            show_fields_list.append('div_contact_supplier')
+            show_fields_list.append('div_contact_curr_supplier')
+            show_fields_list.append('div_project')
+            hide_fields_list.append('div_rigid_box_type_id')
+            hide_fields_list.append('div_wrap_type_id')
+            show_fields_list.append('div_wall_type_id')
+        elif box.other_box:
+            print (">>>>>>>>>>>>>>box.other_box>>>>>>>>>>>",box.other_box)
+            '''hide_fields_list.append('div_single_wall_id')            
+            hide_fields_list.append('div_double_wall_id')
+            hide_fields_list.append('div_triple_wall_id')
+            hide_fields_list.append('div_box_weight')
+            hide_fields_list.append('div_box_color_id')
+            hide_fields_list.append('div_need_printing_id')
+            hide_fields_list.append('div_quantity1')
+            hide_fields_list.append('div_quantity2')
+            hide_fields_list.append('div_quantity3')
+            hide_fields_list.append('div_order_frequency_id')
+            hide_fields_list.append('div_budget')
+            hide_fields_list.append('div_need_boxes_id')
+            hide_fields_list.append('div_curr_supplier')
+            hide_fields_list.append('div_project_id')
+            hide_fields_list.append('div_strength_required')
+            hide_fields_list.append('div_weight')
+            hide_fields_list.append('div_need_help_strength')'''
+            hide_fields_list.append('div_rigid_box_type_id')
+            hide_fields_list.append('div_wrap_type_id')
+        else:
+            show_fields_list.append('div_single_wall_id')            
+            show_fields_list.append('div_double_wall_id')
+            show_fields_list.append('div_triple_wall_id')
+            show_fields_list.append('div_box_weight')
+            show_fields_list.append('div_box_color_id')
+            show_fields_list.append('div_need_printing_id')
+            show_fields_list.append('div_quantity1')
+            show_fields_list.append('div_quantity2')
+            show_fields_list.append('div_quantity3')
+            show_fields_list.append('div_order_frequency_id')
+            show_fields_list.append('div_budget')
+            show_fields_list.append('div_need_boxes_id')
+            show_fields_list.append('div_curr_supplier')
+            show_fields_list.append('div_project_id')
+            show_fields_list.append('div_strength_required')
+            show_fields_list.append('div_weight')
+            show_fields_list.append('div_need_help_strength')
+            show_fields_list.append('div_need_printing')
+            show_fields_list.append('div_quantity_needed')
+            show_fields_list.append('div_order_frequency')
+            show_fields_list.append('div_sample')
+            show_fields_list.append('div_need_sample')
+            show_fields_list.append('div_example')
+            show_fields_list.append('div_design_example')
+            show_fields_list.append('div_file')
+            show_fields_list.append('div_Budget_respect')
+            show_fields_list.append('div_need_boxes')
+            show_fields_list.append('div_supplier')
+            show_fields_list.append('div_contact_supplier')
+            show_fields_list.append('div_contact_curr_supplier')
+            show_fields_list.append('div_project')
+            hide_fields_list.append('div_rigid_box_type_id')
+            hide_fields_list.append('div_wrap_type_id')
+            show_fields_list.append('div_wall_type_id')
+        return dict(
+            hide_fields = hide_fields_list,
+            show_fields = show_fields_list,
+        )
+
+    @http.route(['/box_style_needed_yes_no/<model("rigid.box.needed"):box_needed>'], type='json', auth="public", methods=['POST'], website=True)
+    def call_box_style_needed_yes_no(self, box_needed, **kw):
+        print (">>>>>>>>>>>>>>box_needed>>>>>>>>>>>",box_needed)
+        show_fields_list = ['div_rigid_box_needed_id']
+        hide_fields_list = []
+        if box_needed.yes:
+            print (">>>>>>>>>>>>box_needed.yes:>>>>>>>>>>",box_needed.yes)
+            show_fields_list.append('div_rigid_box_type_id')
+            show_fields_list.append('div_box_wrap_needed_id')
+            show_fields_list.append('div_box_shape_id')
+            show_fields_list.append('div_single_wall_id')            
+            show_fields_list.append('div_double_wall_id')
+            show_fields_list.append('div_triple_wall_id')
+            show_fields_list.append('div_box_weight')
+            show_fields_list.append('div_box_color_id')
+            show_fields_list.append('div_need_printing_id')
+            show_fields_list.append('div_quantity1')
+            show_fields_list.append('div_quantity2')
+            show_fields_list.append('div_quantity3')
+            show_fields_list.append('div_order_frequency_id')
+            show_fields_list.append('div_budget')
+            show_fields_list.append('div_need_boxes_id')
+            show_fields_list.append('div_curr_supplier')
+            show_fields_list.append('div_project_id')
+            show_fields_list.append('div_strength_required')
+            show_fields_list.append('div_weight')
+            show_fields_list.append('div_need_help_strength')
+            show_fields_list.append('div_need_printing')
+            show_fields_list.append('div_quantity_needed')
+            show_fields_list.append('div_order_frequency')
+            show_fields_list.append('div_sample')
+            show_fields_list.append('div_need_sample')
+            show_fields_list.append('div_example')
+            show_fields_list.append('div_design_example')
+            show_fields_list.append('div_file')
+            show_fields_list.append('div_Budget_respect')
+            show_fields_list.append('div_need_boxes')
+            show_fields_list.append('div_supplier')
+            show_fields_list.append('div_contact_supplier')
+            show_fields_list.append('div_contact_curr_supplier')
+            show_fields_list.append('div_project')
+            show_fields_list.append('div_wall_type_id')
+        else:
+            show_fields_list.append('div_box_wrap_needed_id')
+            show_fields_list.append('div_box_shape_id')
+            show_fields_list.append('div_single_wall_id')            
+            show_fields_list.append('div_double_wall_id')
+            show_fields_list.append('div_triple_wall_id')
+            show_fields_list.append('div_box_weight')
+            show_fields_list.append('div_box_color_id')
+            show_fields_list.append('div_need_printing_id')
+            show_fields_list.append('div_quantity1')
+            show_fields_list.append('div_quantity2')
+            show_fields_list.append('div_quantity3')
+            show_fields_list.append('div_order_frequency_id')
+            show_fields_list.append('div_budget')
+            show_fields_list.append('div_need_boxes_id')
+            show_fields_list.append('div_curr_supplier')
+            show_fields_list.append('div_project_id')
+            show_fields_list.append('div_strength_required')
+            show_fields_list.append('div_weight')
+            show_fields_list.append('div_need_help_strength')
+            show_fields_list.append('div_need_printing')
+            show_fields_list.append('div_quantity_needed')
+            show_fields_list.append('div_order_frequency')
+            show_fields_list.append('div_sample')
+            show_fields_list.append('div_need_sample')
+            show_fields_list.append('div_example')
+            show_fields_list.append('div_design_example')
+            show_fields_list.append('div_file')
+            show_fields_list.append('div_Budget_respect')
+            show_fields_list.append('div_need_boxes')
+            show_fields_list.append('div_supplier')
+            show_fields_list.append('div_contact_supplier')
+            show_fields_list.append('div_contact_curr_supplier')
+            show_fields_list.append('div_project')
+            hide_fields_list.append('div_rigid_box_type_id')
+            hide_fields_list.append('div_wrap_type_id')
+            show_fields_list.append('div_wall_type_id')
+        return dict(
+            hide_fields = hide_fields_list,
+            show_fields = show_fields_list,
+        )
+
+
+    @http.route(['/box_wrap_needed_yes_no/<model("box.wrap.needed"):box_wrap_needed>'], type='json', auth="public", methods=['POST'], website=True)
+    def call_box_wrap_needed_yes_no(self, box_wrap_needed, **kw):
+        print (">>>>>>>>>>>>>>box_wrap_needed>>>>>>>>>>>",box_wrap_needed)
+        show_fields_list = ['div_box_wrap_needed_id']
+        hide_fields_list = []
+        if box_wrap_needed.yes:
+            print (">>>>>>>>>>>>box_wrap_needed.yes:>>>>>>>>>>",box_wrap_needed.yes)
+            show_fields_list.append('div_wrap_type_id')
+            show_fields_list.append('div_rigid_box_needed_id')
+            show_fields_list.append('div_box_shape_id')
+            show_fields_list.append('div_single_wall_id')            
+            show_fields_list.append('div_double_wall_id')
+            show_fields_list.append('div_triple_wall_id')
+            show_fields_list.append('div_box_weight')
+            show_fields_list.append('div_box_color_id')
+            show_fields_list.append('div_need_printing_id')
+            show_fields_list.append('div_quantity1')
+            show_fields_list.append('div_quantity2')
+            show_fields_list.append('div_quantity3')
+            show_fields_list.append('div_order_frequency_id')
+            show_fields_list.append('div_budget')
+            show_fields_list.append('div_need_boxes_id')
+            show_fields_list.append('div_curr_supplier')
+            show_fields_list.append('div_project_id')
+            show_fields_list.append('div_strength_required')
+            show_fields_list.append('div_weight')
+            show_fields_list.append('div_need_help_strength')
+            show_fields_list.append('div_need_printing')
+            show_fields_list.append('div_quantity_needed')
+            show_fields_list.append('div_order_frequency')
+            show_fields_list.append('div_sample')
+            show_fields_list.append('div_need_sample')
+            show_fields_list.append('div_example')
+            show_fields_list.append('div_design_example')
+            show_fields_list.append('div_file')
+            show_fields_list.append('div_Budget_respect')
+            show_fields_list.append('div_need_boxes')
+            show_fields_list.append('div_supplier')
+            show_fields_list.append('div_contact_supplier')
+            show_fields_list.append('div_contact_curr_supplier')
+            show_fields_list.append('div_project')
+            show_fields_list.append('div_wall_type_id')
+        else:
+            show_fields_list.append('div_rigid_box_needed_id')
+            show_fields_list.append('div_box_shape_id')
+            show_fields_list.append('div_single_wall_id')            
+            show_fields_list.append('div_double_wall_id')
+            show_fields_list.append('div_triple_wall_id')
+            show_fields_list.append('div_box_weight')
+            show_fields_list.append('div_box_color_id')
+            show_fields_list.append('div_need_printing_id')
+            show_fields_list.append('div_quantity1')
+            show_fields_list.append('div_quantity2')
+            show_fields_list.append('div_quantity3')
+            show_fields_list.append('div_order_frequency_id')
+            show_fields_list.append('div_budget')
+            show_fields_list.append('div_need_boxes_id')
+            show_fields_list.append('div_curr_supplier')
+            show_fields_list.append('div_project_id')
+            show_fields_list.append('div_strength_required')
+            show_fields_list.append('div_weight')
+            show_fields_list.append('div_need_help_strength')
+            show_fields_list.append('div_need_printing')
+            show_fields_list.append('div_quantity_needed')
+            show_fields_list.append('div_order_frequency')
+            show_fields_list.append('div_sample')
+            show_fields_list.append('div_need_sample')
+            show_fields_list.append('div_example')
+            show_fields_list.append('div_design_example')
+            show_fields_list.append('div_file')
+            show_fields_list.append('div_Budget_respect')
+            show_fields_list.append('div_need_boxes')
+            show_fields_list.append('div_supplier')
+            show_fields_list.append('div_contact_supplier')
+            show_fields_list.append('div_contact_curr_supplier')
+            show_fields_list.append('div_project')
+            hide_fields_list.append('div_rigid_box_type_id')
+            hide_fields_list.append('div_wrap_type_id')
+            show_fields_list.append('div_wall_type_id')
+        return dict(
+            hide_fields = hide_fields_list,
+            show_fields = show_fields_list,
+        )
+
+    @http.route(['/box_shape_infos/<model("box.shape"):box_shape>'], type='json', auth="public", methods=['POST'], website=True)
+    def call_box_shape_infos(self, box_shape, **kw):
+        print (">>>>>>>>>>>>>>box_shape>>>>>>>>>>>",box_shape)
+        show_fields_list = ['div_box_shape_id']
+        if box_shape.other:
+            print (">>>>>>>>>>>>box_shape.other>>>>>>>>>>",box_shape.other)
+            show_fields_list.append('div_box_wrap_needed_id')
+            show_fields_list.append('div_rigid_box_needed_id')
+            show_fields_list.append('div_other_box_shape')
+            show_fields_list.append('div_single_wall_id')            
+            show_fields_list.append('div_double_wall_id')
+            show_fields_list.append('div_triple_wall_id')
+            show_fields_list.append('div_box_weight')
+            show_fields_list.append('div_box_color_id')
+            show_fields_list.append('div_need_printing_id')
+            show_fields_list.append('div_quantity1')
+            show_fields_list.append('div_quantity2')
+            show_fields_list.append('div_quantity3')
+            show_fields_list.append('div_order_frequency_id')
+            show_fields_list.append('div_budget')
+            show_fields_list.append('div_need_boxes_id')
+            show_fields_list.append('div_curr_supplier')
+            show_fields_list.append('div_project_id')
+            show_fields_list.append('div_strength_required')
+            show_fields_list.append('div_weight')
+            show_fields_list.append('div_need_help_strength')
+            show_fields_list.append('div_need_printing')
+            show_fields_list.append('div_quantity_needed')
+            show_fields_list.append('div_order_frequency')
+            show_fields_list.append('div_sample')
+            show_fields_list.append('div_need_sample')
+            show_fields_list.append('div_example')
+            show_fields_list.append('div_design_example')
+            show_fields_list.append('div_file')
+            show_fields_list.append('div_Budget_respect')
+            show_fields_list.append('div_need_boxes')
+            show_fields_list.append('div_supplier')
+            show_fields_list.append('div_contact_supplier')
+            show_fields_list.append('div_contact_curr_supplier')
+            show_fields_list.append('div_project')
+            show_fields_list.append('div_rigid_box_type_id')
+            show_fields_list.append('div_wrap_type_id')
+            show_fields_list.append('div_wall_type_id')
+        else:
+            show_fields_list.append('div_rigid_box_needed_id')
+            show_fields_list.append('div_box_shape_id')
+            show_fields_list.append('div_box_wrap_needed_id')
+            show_fields_list.append('div_single_wall_id')            
+            show_fields_list.append('div_double_wall_id')
+            show_fields_list.append('div_triple_wall_id')
+            show_fields_list.append('div_box_weight')
+            show_fields_list.append('div_box_color_id')
+            show_fields_list.append('div_need_printing_id')
+            show_fields_list.append('div_quantity1')
+            show_fields_list.append('div_quantity2')
+            show_fields_list.append('div_quantity3')
+            show_fields_list.append('div_order_frequency_id')
+            show_fields_list.append('div_budget')
+            show_fields_list.append('div_need_boxes_id')
+            show_fields_list.append('div_curr_supplier')
+            show_fields_list.append('div_project_id')
+            show_fields_list.append('div_strength_required')
+            show_fields_list.append('div_weight')
+            show_fields_list.append('div_need_help_strength')
+            show_fields_list.append('div_need_printing')
+            show_fields_list.append('div_quantity_needed')
+            show_fields_list.append('div_order_frequency')
+            show_fields_list.append('div_sample')
+            show_fields_list.append('div_need_sample')
+            show_fields_list.append('div_example')
+            show_fields_list.append('div_design_example')
+            show_fields_list.append('div_file')
+            show_fields_list.append('div_Budget_respect')
+            show_fields_list.append('div_need_boxes')
+            show_fields_list.append('div_supplier')
+            show_fields_list.append('div_contact_supplier')
+            show_fields_list.append('div_contact_curr_supplier')
+            show_fields_list.append('div_project')
+            show_fields_list.append('div_rigid_box_type_id')
+            show_fields_list.append('div_wrap_type_id')
+            show_fields_list.append('div_wall_type_id')
+        return dict(
+            show_fields = show_fields_list,
+        )
+
+    @http.route(['/substrate_type_infos/<model("substrate.type"):substrate_type>'], type='json', auth="public", methods=['POST'], website=True)
+    def call_substrate_type_infos(self, substrate_type, **kw):
+        print (">>>>>>>>>>>>>>substrate_type>>>>>>>>>>>",substrate_type)
+        show_fields_list = ['div_substrate_type_id']
+        if substrate_type.f_n_e_flute:
+            print (">>>>>>>>>>>>substrate_type.f_n_e_flute>>>>>>>>>>",substrate_type.f_n_e_flute)
+            show_fields_list.append('div_micro_flute_id')
+            show_fields_list.append('div_folding_style_id')
+            show_fields_list.append('div_single_wall_id')            
+            show_fields_list.append('div_double_wall_id')
+            show_fields_list.append('div_triple_wall_id')
+            show_fields_list.append('div_box_weight')
+            show_fields_list.append('div_box_color_id')
+            show_fields_list.append('div_need_printing_id')
+            show_fields_list.append('div_quantity1')
+            show_fields_list.append('div_quantity2')
+            show_fields_list.append('div_quantity3')
+            show_fields_list.append('div_order_frequency_id')
+            show_fields_list.append('div_budget')
+            show_fields_list.append('div_need_boxes_id')
+            show_fields_list.append('div_curr_supplier')
+            show_fields_list.append('div_project_id')
+            show_fields_list.append('div_strength_required')
+            show_fields_list.append('div_weight')
+            show_fields_list.append('div_need_help_strength')
+            show_fields_list.append('div_need_printing')
+            show_fields_list.append('div_quantity_needed')
+            show_fields_list.append('div_order_frequency')
+            show_fields_list.append('div_sample')
+            show_fields_list.append('div_need_sample')
+            show_fields_list.append('div_example')
+            show_fields_list.append('div_design_example')
+            show_fields_list.append('div_file')
+            show_fields_list.append('div_Budget_respect')
+            show_fields_list.append('div_need_boxes')
+            show_fields_list.append('div_supplier')
+            show_fields_list.append('div_contact_supplier')
+            show_fields_list.append('div_contact_curr_supplier')
+            show_fields_list.append('div_project')
+            show_fields_list.append('div_wall_type_id')
+        elif substrate_type.calipers:
+            show_fields_list.append('div_folding_box_calipers_id')
+            show_fields_list.append('div_folding_style_id')
+            show_fields_list.append('div_single_wall_id')            
+            show_fields_list.append('div_double_wall_id')
+            show_fields_list.append('div_triple_wall_id')
+            show_fields_list.append('div_box_weight')
+            show_fields_list.append('div_box_color_id')
+            show_fields_list.append('div_need_printing_id')
+            show_fields_list.append('div_quantity1')
+            show_fields_list.append('div_quantity2')
+            show_fields_list.append('div_quantity3')
+            show_fields_list.append('div_order_frequency_id')
+            show_fields_list.append('div_budget')
+            show_fields_list.append('div_need_boxes_id')
+            show_fields_list.append('div_curr_supplier')
+            show_fields_list.append('div_project_id')
+            show_fields_list.append('div_strength_required')
+            show_fields_list.append('div_weight')
+            show_fields_list.append('div_need_help_strength')
+            show_fields_list.append('div_need_printing')
+            show_fields_list.append('div_quantity_needed')
+            show_fields_list.append('div_order_frequency')
+            show_fields_list.append('div_sample')
+            show_fields_list.append('div_need_sample')
+            show_fields_list.append('div_example')
+            show_fields_list.append('div_design_example')
+            show_fields_list.append('div_file')
+            show_fields_list.append('div_Budget_respect')
+            show_fields_list.append('div_need_boxes')
+            show_fields_list.append('div_supplier')
+            show_fields_list.append('div_contact_supplier')
+            show_fields_list.append('div_contact_curr_supplier')
+            show_fields_list.append('div_project')
+            show_fields_list.append('div_wall_type_id')
+        else:
+            show_fields_list.append('div_folding_style_id')
+            show_fields_list.append('div_single_wall_id')            
+            show_fields_list.append('div_double_wall_id')
+            show_fields_list.append('div_triple_wall_id')
+            show_fields_list.append('div_box_weight')
+            show_fields_list.append('div_box_color_id')
+            show_fields_list.append('div_need_printing_id')
+            show_fields_list.append('div_quantity1')
+            show_fields_list.append('div_quantity2')
+            show_fields_list.append('div_quantity3')
+            show_fields_list.append('div_order_frequency_id')
+            show_fields_list.append('div_budget')
+            show_fields_list.append('div_need_boxes_id')
+            show_fields_list.append('div_curr_supplier')
+            show_fields_list.append('div_project_id')
+            show_fields_list.append('div_strength_required')
+            show_fields_list.append('div_weight')
+            show_fields_list.append('div_need_help_strength')
+            show_fields_list.append('div_need_printing')
+            show_fields_list.append('div_quantity_needed')
+            show_fields_list.append('div_order_frequency')
+            show_fields_list.append('div_sample')
+            show_fields_list.append('div_need_sample')
+            show_fields_list.append('div_example')
+            show_fields_list.append('div_design_example')
+            show_fields_list.append('div_file')
+            show_fields_list.append('div_Budget_respect')
+            show_fields_list.append('div_need_boxes')
+            show_fields_list.append('div_supplier')
+            show_fields_list.append('div_contact_supplier')
+            show_fields_list.append('div_contact_curr_supplier')
+            show_fields_list.append('div_project')
+            show_fields_list.append('div_wall_type_id')
+        return dict(
+            show_fields = show_fields_list,
+        )
+
+    @http.route(['/box_calipers_infos/<model("folding.box.calipers"):box_calipers>'], type='json', auth="public", methods=['POST'], website=True)
+    def call_box_calipers_infos(self, box_calipers, **kw):
+        print (">>>>>>>>>>>>>>box_calipers>>>>>>>>>>>",box_calipers)
+        show_fields_list = ['div_folding_box_calipers_id']
+        if box_calipers.other:
+            print (">>>>>>>>>>>>box_calipers.other>>>>>>>>>>",box_calipers.other)
+            show_fields_list.append('div_folding_style_id')
+            show_fields_list.append('div_substrate_type_id')
+            show_fields_list.append('div_other_caliper')
+            show_fields_list.append('div_single_wall_id')            
+            show_fields_list.append('div_double_wall_id')
+            show_fields_list.append('div_triple_wall_id')
+            show_fields_list.append('div_box_weight')
+            show_fields_list.append('div_box_color_id')
+            show_fields_list.append('div_need_printing_id')
+            show_fields_list.append('div_quantity1')
+            show_fields_list.append('div_quantity2')
+            show_fields_list.append('div_quantity3')
+            show_fields_list.append('div_order_frequency_id')
+            show_fields_list.append('div_budget')
+            show_fields_list.append('div_need_boxes_id')
+            show_fields_list.append('div_curr_supplier')
+            show_fields_list.append('div_project_id')
+            show_fields_list.append('div_strength_required')
+            show_fields_list.append('div_weight')
+            show_fields_list.append('div_need_help_strength')
+            show_fields_list.append('div_need_printing')
+            show_fields_list.append('div_quantity_needed')
+            show_fields_list.append('div_order_frequency')
+            show_fields_list.append('div_sample')
+            show_fields_list.append('div_need_sample')
+            show_fields_list.append('div_example')
+            show_fields_list.append('div_design_example')
+            show_fields_list.append('div_file')
+            show_fields_list.append('div_Budget_respect')
+            show_fields_list.append('div_need_boxes')
+            show_fields_list.append('div_supplier')
+            show_fields_list.append('div_contact_supplier')
+            show_fields_list.append('div_contact_curr_supplier')
+            show_fields_list.append('div_project')
+            show_fields_list.append('div_wall_type_id')
+        else:
+            show_fields_list.append('div_substrate_type_id')
+            show_fields_list.append('div_folding_style_id')
+            show_fields_list.append('div_single_wall_id')            
+            show_fields_list.append('div_double_wall_id')
+            show_fields_list.append('div_triple_wall_id')
+            show_fields_list.append('div_box_weight')
+            show_fields_list.append('div_box_color_id')
+            show_fields_list.append('div_need_printing_id')
+            show_fields_list.append('div_quantity1')
+            show_fields_list.append('div_quantity2')
+            show_fields_list.append('div_quantity3')
+            show_fields_list.append('div_order_frequency_id')
+            show_fields_list.append('div_budget')
+            show_fields_list.append('div_need_boxes_id')
+            show_fields_list.append('div_curr_supplier')
+            show_fields_list.append('div_project_id')
+            show_fields_list.append('div_strength_required')
+            show_fields_list.append('div_weight')
+            show_fields_list.append('div_need_help_strength')
+            show_fields_list.append('div_need_printing')
+            show_fields_list.append('div_quantity_needed')
+            show_fields_list.append('div_order_frequency')
+            show_fields_list.append('div_sample')
+            show_fields_list.append('div_need_sample')
+            show_fields_list.append('div_example')
+            show_fields_list.append('div_design_example')
+            show_fields_list.append('div_file')
+            show_fields_list.append('div_Budget_respect')
+            show_fields_list.append('div_need_boxes')
+            show_fields_list.append('div_supplier')
+            show_fields_list.append('div_contact_supplier')
+            show_fields_list.append('div_contact_curr_supplier')
+            show_fields_list.append('div_project')
+            show_fields_list.append('div_wall_type_id')
+        return dict(
+            show_fields = show_fields_list,
+        )
+
+    @http.route(['/wall_type_infos/<model("wall.type"):box_wall_type>'], type='json', auth="public", methods=['POST'], website=True)
+    def call_wall_type_infos(self, box_wall_type, **kw):
+        print (">>>>>>>>>>>>>>box_wall_type>>>>>>>>>>>",box_wall_type)
+        show_fields_list = ['div_wall_type_id']
+        if box_wall_type.single_wall:
+            show_fields_list.append('div_single_wall_id')
+        elif box_wall_type.double_wall:
+            show_fields_list.append('div_double_wall_id')
+        elif box_wall_type.triple_wall:
+            show_fields_list.append('div_triple_wall_id')
+        return dict(
+            show_fields = show_fields_list,
+        )
+
+ 
+
+    @http.route(['/need_printing_yes_no/<model("need.printing"):box_need_printing>'], type='json', auth="public", methods=['POST'], website=True)
+    def call_need_printing_yes_no(self, box_need_printing, **kw):
+        print (">>>>>>>>>>>>>>box_need_printing>>>>>>>>>>>",box_need_printing)
+        show_fields_list = ['div_need_printing_id']
+        if box_need_printing.yes:
+            print (">>>>>>>>>>>>box_need_printing.yes:>>>>>>>>>>",box_need_printing.yes)
+            show_fields_list.append('div_print_color_id')
+            show_fields_list.append('div_print_process_id')
+        return dict(
+            show_fields = show_fields_list,
+        )
+
+    @http.route(['/product_type_infos/<model("product.type"):box_product_type>'], type='json', auth="public", methods=['POST'], website=True)
+    def call_product_type_infos(self, box_product_type, **kw):
+        print (">>>>>>>>>>>>>>box_product_type>>>>>>>>>>>",box_product_type)
+        show_fields_list = ['product_type_id']
+        hide_fields_list = []
+        if box_product_type.pdp_display:
+            show_fields_list = ['product_type_id']
+            hide_fields_list = []
+
+            show_fields_list.append('entire_product_section')
+            show_fields_list.append('entire_pop_section')
+            show_fields_list.append('hear_about_section')
+
+            show_fields_list.append('div_display_type')
+            show_fields_list.append('display_type')
+            show_fields_list.append('hear_about_us_id')
+            hide_fields_list.append('div_comment')
+            hide_fields_list.append('comment')
+            hide_fields_list.append('div_protection_type')
+            hide_fields_list.append('protection_type')
+            show_fields_list.append('div_about_us')
+        elif box_product_type.protection:
+            show_fields_list = ['product_type_id']
+            hide_fields_list = []
+
+            show_fields_list.append('entire_product_section')
+            show_fields_list.append('entire_protection_section')
+            show_fields_list.append('hear_about_section')
+
+            show_fields_list.append('div_protection_type')
+            show_fields_list.append('protection_type')
+            show_fields_list.append('hear_about_us_id')
+            hide_fields_list.append('div_comment')
+            hide_fields_list.append('comment')
+            hide_fields_list.append('div_display_type')
+            hide_fields_list.append('display_type')
+            show_fields_list.append('div_about_us')
+        elif box_product_type.boxes:
+            show_fields_list = ['product_type_id']
+            hide_fields_list = []
+
+            show_fields_list.append('entire_product_section')
+            show_fields_list.append('other_product_section')
+            show_fields_list.append('hear_about_section')
+
+            show_fields_list.append('div_select_box_style')
+            show_fields_list.append('div_box_style_id')
+            show_fields_list.append('div_box_size')
+            show_fields_list.append('div_box_length')
+            show_fields_list.append('div_box_width')
+            show_fields_list.append('div_box_height')
+            show_fields_list.append('div_single_wall_id')            
+            show_fields_list.append('div_double_wall_id')
+            show_fields_list.append('div_triple_wall_id')
+            show_fields_list.append('div_box_weight')
+            show_fields_list.append('div_box_color_id')
+            show_fields_list.append('div_need_printing_id')
+            show_fields_list.append('div_quantity1')
+            show_fields_list.append('div_quantity2')
+            show_fields_list.append('div_quantity3')
+            show_fields_list.append('div_order_frequency_id')
+            show_fields_list.append('div_budget')
+            show_fields_list.append('div_need_boxes_id')
+            show_fields_list.append('div_curr_supplier')
+            show_fields_list.append('div_project_id')
+            show_fields_list.append('div_strength_required')
+            show_fields_list.append('div_weight')
+            show_fields_list.append('div_need_help_strength')
+            show_fields_list.append('div_need_printing')
+            show_fields_list.append('div_quantity_needed')
+            show_fields_list.append('div_order_frequency')
+            show_fields_list.append('div_sample')
+            show_fields_list.append('div_need_sample')
+            show_fields_list.append('div_example')
+            show_fields_list.append('div_design_example')
+            show_fields_list.append('div_file')
+            show_fields_list.append('div_Budget_respect')
+            show_fields_list.append('div_need_boxes')
+            show_fields_list.append('div_supplier')
+            show_fields_list.append('div_contact_supplier')
+            show_fields_list.append('div_contact_curr_supplier')
+            show_fields_list.append('div_project')
+            show_fields_list.append('div_comment')
+            show_fields_list.append('comment')
+            show_fields_list.append('hear_about_us_id')
+            show_fields_list.append('div_about_us')
+            hide_fields_list.append('div_protection_type')
+            hide_fields_list.append('protection_type')
+            hide_fields_list.append('div_display_type')
+            hide_fields_list.append('display_type')
+            show_fields_list.append('div_wall_type_id')
+        return dict(
+            hide_fields = hide_fields_list,
+            show_fields = show_fields_list,
+        )
+
+
+    @http.route(['/request_quote'], type='http', auth="public", website=True)
+    def request_quote(self, redirect=None, **post):
+        values = {}
+        boxstyles = request.env['quote.box.style'].sudo().search([])
+        walltype = request.env['wall.type'].sudo().search([])
+        singlewall = request.env['strength.single.wall'].sudo().search([])
+        doublewall = request.env['strength.double.wall'].sudo().search([])
+        triplewall = request.env['strength.triple.wall'].sudo().search([])
+        boxcolors = request.env['quote.box.color'].sudo().search([])
+        projects = request.env['new.existing.project'].sudo().search([])
+        industries = request.env['res.industry'].sudo().search([])
+        printprocess = request.env['print.process'].sudo().search([])
+        printcolor = request.env['print.color'].sudo().search([])
+        printlabel = request.env['print.label'].sudo().search([])
+        wraptype = request.env['wrap.type'].sudo().search([])
+        rigidboxtype = request.env['rigid.box.type'].sudo().search([])
+        rigidboxneeded = request.env['rigid.box.needed'].sudo().search([])
+        boxwrapneeded = request.env['box.wrap.needed'].sudo().search([])
+        needprinting = request.env['need.printing'].sudo().search([])
+        boxshape = request.env['box.shape'].sudo().search([])
+        foldingstyle = request.env['folding.style'].sudo().search([])
+        substratetype = request.env['substrate.type'].sudo().search([])
+        microflute = request.env['micro.flute'].sudo().search([])
+        foldingboxcalipers = request.env['folding.box.calipers'].sudo().search([])
+        hear_aboutus = request.env['hear.about.us'].sudo().search([])
+        orderfrequency = request.env['order.frequency'].sudo().search([])
+        countries = request.env['res.country'].sudo().search([('unable_for_yulpak','=',True)])
+        producttype = request.env['product.type'].sudo().search([])
+        needboxes = request.env['need.boxes'].sudo().search([])
+
+        values.update({
+            'countries': countries,
+            'industries': industries,
+            'boxstyles': boxstyles,
+            'walltype': walltype,
+            'singlewall': singlewall,
+            'doublewall': doublewall,
+            'triplewall': triplewall,
+            'boxcolors': boxcolors,
+            'hear_aboutus': hear_aboutus,
+            'projects': projects,
+            'orderfrequency': orderfrequency,
+            'printprocess': printprocess,
+            'printcolor': printcolor,
+            'printlabel': printlabel,
+            'wraptype': wraptype,
+            'rigidboxtype': rigidboxtype,
+            'rigidboxneeded': rigidboxneeded,
+            'boxwrapneeded': boxwrapneeded,
+            'needprinting': needprinting,
+            'boxshape': boxshape,
+            'needboxes': needboxes,
+            'producttype': producttype,
+            'foldingstyle': foldingstyle,
+            'substratetype': substratetype,
+            'microflute': microflute,
+            'foldingboxcalipers': foldingboxcalipers,
+            'redirect': redirect,
+
+        })
+        if http.request.env.user.name != "Public user":
+            # If the non log in user click on 'Request Quote' then let him redirect to page with capturing login detail
+            return request.render("yp_rich_quote.request_quote_with_login", values)
+        else:
+            # If the user is already exist and click on 'Request Quote' then let him redirect to page with capturing login detail
+            return request.render("yp_rich_quote.request_quote_login", values)
+
+
+
+
+class AuthSignupHome(Home): 
+
+    #When Sing in user
+    @http.route('/request_quote_with_login', type='http', auth='public', website=True, csrf=True)
+    def request_new_quote_with_sign_in_user(self,  *args, **kw):
+        print (">>>>>>>>>>>>>>>>>>>>kw>>>>>>>>",kw)
+        values = {}
+        partner = request.env.user.partner_id
+
+        quote = request.env['quote.quote']
+        if kw['need_sample'] == 'True':
+            need_sample = True
+        if kw['need_sample'] == 'False':
+            need_sample = False
+
+        quote = request.env['quote.quote']
+        if kw['design_example'] == 'True':
+            design_example = True
+        if kw['design_example'] == 'False':
+            design_example = False
+
+        quote = request.env['quote.quote']
+        if kw['contact_curr_supplier'] == 'True':
+            contact_curr_supplier = True
+        if kw['contact_curr_supplier'] == 'False':
+            contact_curr_supplier = False
+
+        default_product = request.env.ref('yp_rich_quote.new_default_quote_product_01')
+        print ("==========default_product============",default_product)
+
+        quant = 0
+        if kw['quantity1'] =='':
+            if kw['quantity2'] =='':
+                if kw['quantity3'] =='':
+                    quant = 1
+                else:
+                    quant = int(kw['quantity3'])
+            else:
+                quant = int(kw['quantity2'])
+        else:
+            quant = int(kw['quantity1'])                
+        quote_values ={
+                        'product_id': default_product.id,
+                        'customer_id':partner.id,
+                        #'qty': int(kw['quantity1']) or int(kw['quantity2']) or int(kw['quantity3']) or 1,
+                        'qty':quant ,
+                        'price': 1.0,
+                        'box_length': kw['box_length'],
+                        'box_width': kw['box_width'],
+                        'box_height': kw['box_height'],
+                        'box_weight': kw['box_weight'],
+                        'budget': kw['budget'],
+                        'quantity1': kw['quantity1'],
+                        'quantity2': kw['quantity2'],
+                        'quantity3': kw['quantity3'],
+                        'curr_supplier': kw['curr_supplier'],
+                        'product_type_id': kw['product_type_id'],
+                        'box_color_id':kw['box_color_id'],
+                        'box_style_id':kw['box_style_id'],
+                        'single_wall_id':kw['single_wall_id'],
+                        'double_wall_id':kw['double_wall_id'],
+                        'wall_type_id':kw['wall_type_id'],
+                        'triple_wall_id':kw['triple_wall_id'],
+                        'hear_about_us_id':kw['hear_about_us_id'],
+                        'print_process_id':kw['print_process_id'],
+                        'print_label_id':kw['print_label_id'],
+                        'print_color_id':kw['print_color_id'],
+                        'wrap_type_id':kw['wrap_type_id'],
+                        'rigid_box_type_id':kw['rigid_box_type_id'],
+                        'rigid_box_needed_id':kw['rigid_box_needed_id'],
+                        'box_wrap_needed_id':kw['box_wrap_needed_id'],
+                        'box_shape_id':kw['box_shape_id'],
+                        'other_box_shape': kw['other_box_shape'],
+                        'substrate_type_id': kw['substrate_type_id'],
+                        'micro_flute_id': kw['micro_flute_id'],
+                        'folding_style_id': kw['folding_style_id'],
+                        'folding_box_calipers_id': kw['folding_box_calipers_id'],
+                        'project_id':kw['project_id'],
+                        'order_frequency_id':kw['order_frequency_id'],
+                        'need_printing_id': kw['need_printing_id'],
+                        'need_sample': need_sample,
+                        'need_boxes_id':kw['need_boxes_id'],
+                        'design_example_attachment':kw['file'],
+                        'contact_curr_supplier': contact_curr_supplier,
+                        'other_caliper': kw['other_caliper'],
+                        'comment': kw['comment'],
+                        'display_type': kw['display_type'],
+                        'protection_type': kw['protection_type'],
+                        }
+        quote_new_obj = quote.sudo().create(quote_values)
+
+        quote_values_file = {}
+        for field_name, field_value in kw.items():
+            if field_name == 'file':
+                quote_values_file[field_name] = field_value
+        if 'file' in quote_values_file:
+            for c_file in request.httprequest.files.getlist('file'):
+                data = c_file.read()
+                if c_file.filename:
+                    attachement_obj = request.env['ir.attachment'].sudo().create({
+                                'name': c_file.filename,
+                                'datas': base64.b64encode(data),
+                                'datas_fname': c_file.filename,
+                                'res_model': 'quote.quote',
+                                'res_id': quote_new_obj.id
+                            })
+        return request.redirect('/my/home')
+
+
+    # When Non-signin user
+    @http.route('/request_quote_login', type='http', auth='public', website=True, sitemap=False)
+    #@http.route('/web/login', type='http', auth="none", sitemap=False)
+    def signup_with_new_user_and_quote(self,  *args, **kw):
+        qcontext = self.get_auth_signup_qcontext()
+        print ("=============qcontext=============",qcontext)
+        print("==============qcontext['mobile']==============",qcontext['mobile'])
+        print ("=============qcontext.get('city')=============",qcontext.get('city'))
+
+        default_product = request.env.ref('yp_rich_quote.new_default_quote_product_01')
+        print ("==========default_product============",default_product)
+
+        if not qcontext.get('token') and not qcontext.get('signup_enabled'):
+            raise werkzeug.exceptions.NotFound()
+
+        if 'error' not in qcontext and request.httprequest.method == 'POST':
+            try:
+                self.do_signup(qcontext)
+                # Send an account creation confirmation email
+                if qcontext.get('token'):
+                    user_sudo = request.env['res.users'].sudo().search([('login', '=', qcontext.get('login'))])
+                    print("===================user_sudo===============",user_sudo)
+                    template = request.env.ref('auth_signup.mail_template_user_signup_account_created', raise_if_not_found=False)
+                    print("===================template===============",template)
+
+
+                    if user_sudo and template:
+                        template.sudo().with_context(
+                            lang=user_sudo.lang,
+                            auth_login=werkzeug.url_encode({'auth_login': user_sudo.email}),
+                        ).send_mail(user_sudo.id, force_send=True)
+                res = super(AuthSignupHome, self).web_login(*args, **kw)
+                print("================res=======riken======",res)
+                
+
+                values = {}
+                partner = request.env.user.partner_id
+                print("================partner=============",partner)
+                print("================partner.name=============",partner.name)
+
+                values ={
+                        'name': partner.name,
+                        'function':qcontext['function'],
+                        'country_id':qcontext['country_id'],
+                        'industry_id':qcontext['industry_id'],
+                        'street':qcontext['contact_address'],
+                        'company_name':qcontext['company_name'],
+                        'city':qcontext['city'],
+                        'mobile':qcontext['mobile'],
+                        'phone':qcontext['phone'],
+                        'zip':qcontext['zip'],
+                        }
+                partner.sudo().write(values)
+
+                quote = request.env['quote.quote']
+                if qcontext['need_sample'] == 'True':
+                    need_sample = True
+                if qcontext['need_sample'] == 'False':
+                    need_sample = False
+
+                quote = request.env['quote.quote']
+                if qcontext['design_example'] == 'True':
+                    design_example = True
+                if qcontext['design_example'] == 'False':
+                    design_example = False
+
+                quote = request.env['quote.quote']
+                if qcontext['contact_curr_supplier'] == 'True':
+                    contact_curr_supplier = True
+                if qcontext['contact_curr_supplier'] == 'False':
+                    contact_curr_supplier = False
+
+
+                quant = 0
+                if qcontext['quantity1'] =='':
+                    if qcontext['quantity2'] =='':
+                        if qcontext['quantity3'] =='':
+                            quant = 1
+                        else:
+                            quant = int(qcontext['quantity3'])
+                    else:
+                        quant = int(qcontext['quantity2'])
+                else:
+                    quant = int(qcontext['quantity1']) 
+
+                quote_values ={
+                        'product_id': default_product.id,
+                        'customer_id':partner.id,
+                        #'qty': int(qcontext['quantity1']) or int(qcontext['quantity2']) or int(qcontext['quantity3']) or 1,
+                        'qty': quant,
+                        'price': 1.0,
+                        'box_length': qcontext['box_length'],
+                        'box_width': qcontext['box_width'],
+                        'box_height': qcontext['box_height'],
+                        'box_weight': qcontext['box_weight'],
+                        'budget': qcontext['budget'],
+                        'quantity1': qcontext['quantity1'],
+                        'quantity2': qcontext['quantity2'],
+                        'quantity3': qcontext['quantity3'],
+                        'curr_supplier': qcontext['curr_supplier'],
+                        'product_type_id': qcontext['product_type_id'],
+                        'box_color_id':qcontext['box_color_id'],
+                        'box_style_id':qcontext['box_style_id'],
+                        'single_wall_id':qcontext['single_wall_id'],
+                        'double_wall_id':qcontext['double_wall_id'],
+                        'triple_wall_id':qcontext['triple_wall_id'],
+                        'wall_type_id':qcontext['wall_type_id'],
+                        'hear_about_us_id':qcontext['hear_about_us_id'],
+                        'print_process_id':qcontext['print_process_id'],
+                        'print_label_id':qcontext['print_label_id'],
+                        'print_color_id':qcontext['print_color_id'],
+                        'wrap_type_id':qcontext['wrap_type_id'],
+                        'rigid_box_type_id':qcontext['rigid_box_type_id'],
+                        'rigid_box_needed_id':qcontext['rigid_box_needed_id'],
+                        'box_wrap_needed_id':qcontext['box_wrap_needed_id'],
+                        'box_shape_id':qcontext['box_shape_id'],
+                        'other_box_shape': qcontext['other_box_shape'],
+                        'substrate_type_id': qcontext['substrate_type_id'],
+                        'micro_flute_id': qcontext['micro_flute_id'],
+                        'folding_style_id': qcontext['folding_style_id'],
+                        'folding_box_calipers_id': qcontext['folding_box_calipers_id'],
+                        'project_id':qcontext['project_id'],
+                        'order_frequency_id':qcontext['order_frequency_id'],
+                        'need_printing_id': qcontext['need_printing_id'],
+                        'need_sample': need_sample,
+                        'need_boxes_id':qcontext['need_boxes_id'],
+                        'design_example_attachment':qcontext['file'],
+                        'contact_curr_supplier': contact_curr_supplier,
+                        'other_caliper': qcontext['other_caliper'],
+                        'comment': qcontext['comment'],
+                        'display_type': qcontext['display_type'],
+                        'protection_type': qcontext['protection_type'],
+                        }
+                quote_new_obj = quote.sudo().create(quote_values)
+
+
+                quote_values_file = {}
+                for field_name, field_value in kw.items():
+                    if field_name == 'file':
+                        quote_values_file[field_name] = field_value
+                if 'file' in quote_values_file:
+                    for c_file in request.httprequest.files.getlist('file'):
+                        data = c_file.read()
+                        if c_file.filename:
+                            attachement_obj = request.env['ir.attachment'].sudo().create({
+                                'name': c_file.filename,
+                                'datas': base64.b64encode(data),
+                                'datas_fname': c_file.filename,
+                                'res_model': 'quote.quote',
+                                'res_id': quote_new_obj.id
+                            })
+
+                return request.redirect('/my/home')
+
+
+
+            except UserError as e:
+                qcontext['error'] = e.name or e.value
+            except (SignupError, AssertionError) as e:
+                if request.env["res.users"].sudo().search([("login", "=", qcontext.get("login"))]):
+                    qcontext["error"] = _("Another user is already registered using this email address.")
+                else:
+                    _logger.error("%s", e)
+                    qcontext['error'] = _("Could not create a new account.")
+
+        response = request.render('auth_signup.signup', qcontext)
+        response.headers['X-Frame-Options'] = 'DENY'
+        return response
+ 
+     
+
+
+ 
+
