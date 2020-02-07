@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="frontend_layout_onboarding_inh" name="Onboarding" inherit_id="portal.frontend_layout">
+        <xpath expr="//a[@id='o_logout']" position="before">
+            <a id="onboarding_menu" role="menuitem" class="dropdown-item onboarding" t-attf-href="/onboarding">Onboarding</a>
+        </xpath>
+   </template>
+
+        <record id="onboarding" model="website.page">
+            <field name="url">/onboarding</field>
+            <field name="is_published">True</field>
+            <field name="view_id" ref="abs_vendor_onboarding.menu_onboarding"/>
+            <field name="track">True</field>
+        </record>
+
+        <record id="company_detail" model="website.page">
+            <field name="url">/company_detail</field>
+            <field name="is_published">True</field>
+            <field name="view_id" ref="abs_vendor_onboarding.form_company_detail"/>
+            <field name="track">True</field>
+        </record>
+
+        <record id="fiscal_address" model="website.page">
+            <field name="url">/fiscal_address</field>
+            <field name="is_published">True</field>
+            <field name="view_id" ref="abs_vendor_onboarding.form_fiscal_address"/>
+            <field name="track">True</field>
+        </record>
+
+        <record id="thank_you" model="website.page">
+            <field name="url">/thank_you</field>
+            <field name="is_published">True</field>
+            <field name="view_id" ref="abs_vendor_onboarding.user_thank_you"/>
+            <field name="track">True</field>
+        </record>
+
+</odoo>
