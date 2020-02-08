@@ -14,10 +14,10 @@
             <field name="track">True</field>
         </record>
 
-        <record id="company_detail" model="website.page">
+        <record id="company_detail_new" model="website.page">
             <field name="url">/company_detail</field>
             <field name="is_published">True</field>
-            <field name="view_id" ref="abs_vendor_onboarding.form_company_detail"/>
+            <field name="view_id" ref="abs_vendor_onboarding.form_company_detail_new"/>
             <field name="track">True</field>
         </record>
 
