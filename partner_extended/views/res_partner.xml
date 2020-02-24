@@ -1,0 +1,63 @@
+<odoo>
+  <data>
+      <record model="ir.ui.view" id="partner_extended_form">
+          <field name="name">partner.extended.form</field>
+          <field name="model">res.partner</field>
+          <field name="inherit_id" ref="base.view_partner_form"/>
+          <field name="arch" type="xml">
+              <group name="sale" position="inside">
+                  <field name="is_customer" readonly="1" force_save="1"/>
+              </group>
+              <group name="purchase" position="inside">
+                  <field name="is_vendor" readonly="1" force_save="1"/>
+              </group>
+          </field>
+      </record>
+
+      <record model="ir.ui.view" id="partner_extended_form_is_customer_readonly">
+          <field name="name">partner.extended.form.is.customer.readonly</field>
+          <field name="model">res.partner</field>
+          <field name="inherit_id" ref="base.view_partner_form"/>
+          <field name="groups_id" eval="[(6, 0, [ref('partner_extended.group_set_is_customer') ])]"/>
+          <field name="arch" type="xml">
+            <field name="is_customer" position="attributes">
+                <attribute name="readonly">0</attribute>
+            </field>
+          </field>
+      </record>
+
+      <record model="ir.ui.view" id="partner_extended_form_is_vendor_readonly">
+          <field name="name">partner.extended.form.is.vendor.readonly</field>
+          <field name="model">res.partner</field>
+          <field name="inherit_id" ref="base.view_partner_form"/>
+          <field name="groups_id" eval="[(6, 0, [ref('partner_extended.group_set_is_vendor') ])]"/>
+          <field name="arch" type="xml">
+            <field name="is_vendor" position="attributes">
+                <attribute name="readonly">0</attribute>
+            </field>
+          </field>
+      </record>
+      
+      <record model="ir.ui.view" id="partner_extended_sale_form">
+          <field name="name">partner.extended.sale.form</field>
+          <field name="model">sale.order</field>
+          <field name="inherit_id" ref="sale.view_order_form"/>
+          <field name="arch" type="xml">
+              <field name="partner_id" position="attributes">
+                  <attribute name="domain">[('state','=','approve'),('is_customer','=',True)]</attribute>
+              </field>
+          </field>
+      </record>
+      
+      <record model="ir.ui.view" id="partner_extended_purchase_form">
+          <field name="name">partner.extended.purchase.form</field>
+          <field name="model">purchase.order</field>
+          <field name="inherit_id" ref="purchase.purchase_order_form"/>
+          <field name="arch" type="xml">
+              <field name="partner_id" position="attributes">
+                  <attribute name="domain">[('state','=','approve'),('is_vendor','=',True)]</attribute>
+              </field>
+          </field>
+      </record>
+  </data>
+</odoo>

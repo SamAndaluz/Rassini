@@ -1,0 +1,40 @@
+<odoo>
+  <template id="project_portal_extended.portal_my_tasks_custom" inherit_id="project.portal_my_tasks">
+        <xpath expr="//thead/tr/th[3]" position="before">
+          <th class="text-center">
+            Responsable
+          </th>
+        </xpath>
+        <xpath expr="//tbody/t/tr/td[2]" position="before">
+          <td class="text-center">
+            <span t-esc="task.user_id.name"/>
+          </td>
+        </xpath>
+    </template>
+
+    <template id="project_portal_extended.portal_my_task_custom" inherit_id="project.portal_my_task">
+      <xpath expr="//t[@t-set='card_body']/div[3]" position="after">
+        <!--<div class="mb-1">
+          <strong>Asignar a usuario interno: </strong>
+          <select name="user_id" class="col col-md-2">
+              <option value=""></option>
+              <t t-foreach="user_ids or []" t-as="user">
+                  <option t-att-value="user.id">
+                      <t t-esc="user.name" />
+                  </option>
+              </t>
+          </select>
+        </div>
+        <br/>-->
+        <div class="mb-1">
+          <span>
+            <a role="button" t-attf-href="/my/task/finish/#{task.id}?{{ keep_query() }}" class="btn btn-sm btn-primary">
+              <span role="img" aria-label="Terminar y asignar a Project Manager" title="Terminar y asignar a Project Manager">
+                Terminar y asignar a <span t-esc="task.project_id.user_id.name" />
+              </span>
+            </a>
+          </span>
+        </div>
+      </xpath>
+    </template>
+</odoo>
