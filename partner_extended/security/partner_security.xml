@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="group_set_is_customer" model="res.groups">
+        <field name="name">Can set partner as customer</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
+    <record id="group_set_is_vendor" model="res.groups">
+        <field name="name">Can set partner as vendor</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+</odoo>
