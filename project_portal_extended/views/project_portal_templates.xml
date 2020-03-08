@@ -7,7 +7,7 @@
         </xpath>
         <xpath expr="//tbody/t/tr/td[2]" position="before">
           <td class="text-center">
-            <span t-esc="task.user_id.name"/>
+            <span t-esc="task.sudo().user_id.name"/>
           </td>
         </xpath>
     </template>
@@ -16,7 +16,7 @@
       <xpath expr="//t[@t-set='card_body']/div[3]" position="after">
         <!--<div class="mb-1">
           <strong>Asignar a usuario interno: </strong>
-          <select name="user_id" class="col col-md-2">
+          <select name="user" class="col col-md-2">
               <option value=""></option>
               <t t-foreach="user_ids or []" t-as="user">
                   <option t-att-value="user.id">
@@ -25,12 +25,15 @@
               </t>
           </select>
         </div>
-        <br/>-->
-        <div class="mb-1">
+        <br/>
+        <div>
+          <span><t t-esc="user_id"/></span><span><t t-esc="task.sudo().user_id"/></span>
+        </div>-->
+        <div class="mb-1" t-if="user_id.id == task.sudo().user_id.id and pm_id.id != task.sudo().user_id.id">
           <span>
             <a role="button" t-attf-href="/my/task/finish/#{task.id}?{{ keep_query() }}" class="btn btn-sm btn-primary">
               <span role="img" aria-label="Terminar y asignar a Project Manager" title="Terminar y asignar a Project Manager">
-                Terminar y asignar a <span t-esc="task.project_id.user_id.name" />
+                Terminado | Asignar a Gte Proyecto
               </span>
             </a>
           </span>

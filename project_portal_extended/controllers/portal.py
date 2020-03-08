@@ -33,11 +33,13 @@ class CustomerPortal(CustomerPortal):
         print('-------------------- Entró al nuevo -----------------------')
         partner_id = task.project_id.partner_id.id
         user_ids = request.env['res.users'].sudo().search([('partner_id','child_of',partner_id)])
+        project_manager_id = task.sudo().project_id.user_id
         print(user_ids)
         values = {
             'page_name': 'task',
             'task': task,
             'user': request.env.user,
-            'user_ids': user_ids
+            'user_ids': user_ids,
+            'pm_id': project_manager_id
         }
         return self._get_page_view_values(task, access_token, values, 'my_tasks_history', False, **kwargs)
